@@ -383,6 +383,8 @@ GameObject:
   - component: {fileID: 1534615782}
   - component: {fileID: 1534615781}
   - component: {fileID: 1534615780}
+  - component: {fileID: 1534615784}
+  - component: {fileID: 1534615783}
   m_Layer: 8
   m_Name: Character
   m_TagString: Untagged
@@ -429,6 +431,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_groundCheckDist: 0.01
   m_lerpToGround: 0.1
+  m_StationaryTurnSpeed: 180
+  m_MovingTurnSpeed: 360
+  m_RunCycleLegOffset: 0
 --- !u!54 &1534615782
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -444,6 +449,36 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!95 &1534615783
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1534615778}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: f6a91e1beacbfd3469ca902eacc93c61, type: 3}
+  m_Controller: {fileID: 9100000, guid: 41ab3e3ffb14f624990f0113ba413677, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 1
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+--- !u!136 &1534615784
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1534615778}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.14
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.875, z: 0}
 --- !u!1001 &1539034884
 Prefab:
   m_ObjectHideFlags: 0
@@ -750,6 +785,10 @@ Prefab:
     - target: {fileID: 100092, guid: f6a91e1beacbfd3469ca902eacc93c61, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: f6a91e1beacbfd3469ca902eacc93c61, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f6a91e1beacbfd3469ca902eacc93c61, type: 3}
