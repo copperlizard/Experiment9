@@ -103,58 +103,24 @@ public class EveController : MonoBehaviour
     private void RotateCharacter()
     {
         // In addition to root rotation in the animation
-        float turnSpeed = Mathf.Lerp(m_StationaryTurnSpeed, m_MovingTurnSpeed / Mathf.Max(1.0f, m_forward), m_forward);
-        transform.Rotate(0, m_turn * turnSpeed * Time.deltaTime, 0);
+        float turnSpeed = Mathf.Lerp(m_StationaryTurnSpeed, m_MovingTurnSpeed, Mathf.Abs(m_forward));
+        transform.Rotate(0.0f, m_turn * turnSpeed * Time.deltaTime, 0.0f);        
     }
-
-    private void QuickTurn()
-    {       
-        Quaternion tarRot = Quaternion.LookRotation(transform.TransformDirection(m_move), Vector3.up);
-        StartCoroutine(QuickTurning(transform.rotation, tarRot));
-    }
-
-    private IEnumerator QuickTurning(Quaternion startRot, Quaternion tarRot)
-    {
-        //m_headLook = false;
-
-        AnimatorStateInfo animState = m_animator.GetCurrentAnimatorStateInfo(0);
-
-        float ang = Quaternion.Angle(startRot, tarRot);
-        if (m_jumpLeg > 0.0f)
-        {
-            ang = ang - 360.0f;
-        }
-
-        while (animState.normalizedTime < 1.0f && (animState.IsName("Eve180LeftFoot1") || animState.IsName("Eve180RightFoot1")))
-        {
-            transform.rotation = startRot * Quaternion.Euler(0.0f, -ang * Mathf.SmoothStep(0.0f, 1.0f, animState.normalizedTime), 0.0f);
-
-            animState = m_animator.GetCurrentAnimatorStateInfo(0);
-            yield return null;
-        }
-
-        transform.rotation = tarRot;
-        
-        yield return null;
-    }
-
+    
     public void Move(Vector2 input)
     {
         if (m_grounded)
         {
             Quaternion rot = Quaternion.Euler(0.0f, m_camera.transform.rotation.eulerAngles.y - transform.rotation.eulerAngles.y, 0.0f);
             m_move = Vector3.Lerp(m_move, rot * new Vector3(input.x, 0.0f, input.y), 10.0f * Time.deltaTime);
-            m_forward = m_move.z;
-            m_turn = m_move.x;
+            m_forward = m_move.z + 0.0001f;
+            m_turn = m_move.x + 0.0001f;
+            if (m_forward < 0.0f)
+            {
+                m_turn = (m_move.x + 0.0001f >= 0.0f) ? 1.0f : -1.0f;
+            }
         }
 
-        if (m_forward >= 0.0f)
-        {
-            RotateCharacter();
-        }
-        else
-        {
-            QuickTurn(); //NOT WORKING!!!
-        }
+        RotateCharacter();        
     }
 }

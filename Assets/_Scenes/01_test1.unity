@@ -381,10 +381,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1534615779}
   - component: {fileID: 1534615782}
+  - component: {fileID: 1534615783}
+  - component: {fileID: 1534615784}
   - component: {fileID: 1534615781}
   - component: {fileID: 1534615780}
-  - component: {fileID: 1534615784}
-  - component: {fileID: 1534615783}
   m_Layer: 8
   m_Name: Character
   m_TagString: Untagged
@@ -790,7 +790,8 @@ Prefab:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9500000, guid: f6a91e1beacbfd3469ca902eacc93c61, type: 3}
   m_ParentPrefab: {fileID: 100100000, guid: f6a91e1beacbfd3469ca902eacc93c61, type: 3}
   m_IsPrefabParent: 0
 --- !u!4 &1539034885 stripped
