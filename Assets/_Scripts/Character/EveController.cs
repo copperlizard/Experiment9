@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CapsuleCollider))]
+[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Rigidbody))]
 public class EveController : MonoBehaviour
 {
@@ -22,7 +24,7 @@ public class EveController : MonoBehaviour
 
     private float m_forward = 0.0f, m_turn = 0.0f, m_jumpLeg = -1.0f;
 
-    private bool m_grounded = true, m_jumping = false, m_crouching = false;
+    private bool m_grounded = true, m_jumping = false, m_crouching = false, m_aboutFace = false;
 
     // Use this for initialization
     void Start()
@@ -61,6 +63,8 @@ public class EveController : MonoBehaviour
     void Update()
     {
         UpdateAnimator();
+
+        Debug.DrawLine(transform.position, transform.position + transform.forward);
     }
 
     private void FixedUpdate()
@@ -100,6 +104,57 @@ public class EveController : MonoBehaviour
         }
     }
 
+    private void AboutFace(Vector3 dir)
+    {
+        if (!m_aboutFace)
+        {
+            StartCoroutine(FacingDirection(dir));
+        }
+    }
+
+    private IEnumerator FacingDirection(Vector3 dir)
+    {
+        m_aboutFace = true;
+
+        AnimatorStateInfo animState = m_animator.GetCurrentAnimatorStateInfo(0);
+
+        while (!animState.IsName("QuickTurn"))
+        {
+            //wait for animation
+            animState = m_animator.GetCurrentAnimatorStateInfo(0);
+            Debug.Log("waiting for quickturn state!");
+            yield return null;
+        }
+
+        /*dir = Vector3.ProjectOnPlane(dir, Vector3.up).normalized;
+        Quaternion tarRot = Quaternion.LookRotation(dir, transform.up);
+        Quaternion startRot = transform.rotation;
+        
+        float ang = Quaternion.Angle(startRot, tarRot);
+        if (m_jumpLeg > 0.0f)
+        {
+            ang = ang - 360.0f;
+        }*/
+
+
+        //Quaternion tarRot = Quaternion.LookRotation(dir, transform.up);
+        while (animState.normalizedTime < 1.0f && animState.IsName("QuickTurn"))
+        {
+            Debug.Log("quickturning!");
+
+            //transform.rotation = startRot * Quaternion.Euler(0.0f, -ang * Mathf.SmoothStep(0.0f, 1.0f, animState.normalizedTime), 0.0f);
+            //transform.rotation = Quaternion.Lerp(transform.rotation, tarRot, Mathf.SmoothStep(0.95f, 1.0f, animState.normalizedTime));
+
+            animState = m_animator.GetCurrentAnimatorStateInfo(0);
+            yield return null;
+        }
+
+        //transform.rotation = tarRot;
+        m_aboutFace = false;
+
+        yield return null;        
+    }
+
     private void RotateCharacter()
     {
         // In addition to root rotation in the animation
@@ -115,12 +170,15 @@ public class EveController : MonoBehaviour
             m_move = Vector3.Lerp(m_move, rot * new Vector3(input.x, 0.0f, input.y), 10.0f * Time.deltaTime);
             m_forward = m_move.z + 0.0001f;
             m_turn = m_move.x + 0.0001f;
-            if (m_forward < 0.0f)
-            {
-                m_turn = (m_move.x + 0.0001f >= 0.0f) ? 1.0f : -1.0f;
-            }
         }
 
-        RotateCharacter();        
+        if (m_forward < -0.5f)
+        {
+            AboutFace(transform.TransformDirection(m_move));
+        }
+        else if (!m_aboutFace)
+        {
+            RotateCharacter();
+        }     
     }
 }
