@@ -22,9 +22,9 @@ public class EveController : MonoBehaviour
 
     private Vector3 m_move = Vector3.zero;
 
-    private float m_forward = 0.0f, m_turn = 0.0f, m_jumpLeg = -1.0f;
+    private float m_forward = 0.0f, m_turn = 0.0f, m_jumpLeg = -1.0f, m_dance = 0.0f;
 
-    private bool m_grounded = true, m_jumping = false, m_crouching = false, m_aboutFace = false;
+    private bool m_grounded = true, m_jumping = false, m_crouching = false, m_aboutFace = false, m_dancing = false;
 
     // Use this for initialization
     void Start()
@@ -87,6 +87,9 @@ public class EveController : MonoBehaviour
         m_animator.SetBool("Grounded", m_grounded);
         m_animator.SetBool("Jumping", m_jumping);
         m_animator.SetBool("Crouching", m_crouching);
+
+        m_animator.SetBool("Dancing", m_dancing);
+        m_animator.SetFloat("Dance", m_dance);
     }
 
     private void checkGround()
@@ -118,11 +121,11 @@ public class EveController : MonoBehaviour
 
         AnimatorStateInfo animState = m_animator.GetCurrentAnimatorStateInfo(0);
 
-        while (!animState.IsName("QuickTurn"))
+        while (!animState.IsName("QuickTurnLeftFoot") && !animState.IsName("QuickTurnRightFoot"))
         {
             //wait for animation
             animState = m_animator.GetCurrentAnimatorStateInfo(0);
-            Debug.Log("waiting for quickturn state!");
+            //Debug.Log("waiting for quickturn state!");
             yield return null;
         }
 
@@ -138,9 +141,9 @@ public class EveController : MonoBehaviour
 
 
         //Quaternion tarRot = Quaternion.LookRotation(dir, transform.up);
-        while (animState.normalizedTime < 1.0f && animState.IsName("QuickTurn"))
+        while (animState.normalizedTime < 1.0f && (animState.IsName("QuickTurnLeftFoot") || animState.IsName("QuickTurnRightFoot")))
         {
-            Debug.Log("quickturning!");
+            //Debug.Log("quickturning!");
 
             //transform.rotation = startRot * Quaternion.Euler(0.0f, -ang * Mathf.SmoothStep(0.0f, 1.0f, animState.normalizedTime), 0.0f);
             //transform.rotation = Quaternion.Lerp(transform.rotation, tarRot, Mathf.SmoothStep(0.95f, 1.0f, animState.normalizedTime));
@@ -176,9 +179,15 @@ public class EveController : MonoBehaviour
         {
             AboutFace(transform.TransformDirection(m_move));
         }
-        else if (!m_aboutFace)
+        else if (!m_aboutFace && !m_dancing)
         {
             RotateCharacter();
         }     
+    }
+
+    public void SetDancing(bool dancing, float dance)
+    {
+        m_dancing = dancing;
+        m_dance = dance;
     }
 }
