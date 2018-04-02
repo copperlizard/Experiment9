@@ -125,7 +125,6 @@ public class EveController : MonoBehaviour
         {
             //wait for animation
             animState = m_animator.GetCurrentAnimatorStateInfo(0);
-            //Debug.Log("waiting for quickturn state!");
             yield return null;
         }
 
@@ -138,13 +137,11 @@ public class EveController : MonoBehaviour
         {
             ang = ang - 360.0f;
         }*/
-
-
+        
         //Quaternion tarRot = Quaternion.LookRotation(dir, transform.up);
         while (animState.normalizedTime < 1.0f && (animState.IsName("QuickTurnLeftFoot") || animState.IsName("QuickTurnRightFoot")))
         {
-            //Debug.Log("quickturning!");
-
+            
             //transform.rotation = startRot * Quaternion.Euler(0.0f, -ang * Mathf.SmoothStep(0.0f, 1.0f, animState.normalizedTime), 0.0f);
             //transform.rotation = Quaternion.Lerp(transform.rotation, tarRot, Mathf.SmoothStep(0.95f, 1.0f, animState.normalizedTime));
 
