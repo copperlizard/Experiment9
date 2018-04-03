@@ -298,6 +298,7 @@
     <Compile Include="Assets\_Scripts\CameraController.cs" />
     <Compile Include="Assets\_Scripts\Character\EveControlInput.cs" />
     <Compile Include="Assets\_Scripts\Character\EveController.cs" />
+    <Compile Include="Assets\_Scripts\TextureUpdateController.cs" />
     <Compile Include="Assets\Resources\Standard Assets\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
     <Compile Include="Assets\Resources\Standard Assets\PostProcessing\Runtime\Attributes\MinAttribute.cs" />
     <Compile Include="Assets\Resources\Standard Assets\PostProcessing\Runtime\Attributes\TrackballAttribute.cs" />
@@ -388,6 +389,7 @@
     <None Include="Assets\Resources\Standard Assets\PostProcessing\Utilities\CustomMotionTexture\Shaders\CustomMotionVectorTexture.shader" />
     <None Include="Assets\_Shaders\InteractiveSurfaceShader.shader" />
     <None Include="Assets\_Shaders\TesselationSample.shader" />
+    <None Include="Assets\_Shaders\TextureUpdateShader.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
