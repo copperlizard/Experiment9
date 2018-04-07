@@ -389,6 +389,7 @@
     <None Include="Assets\Resources\Standard Assets\PostProcessing\Utilities\CustomMotionTexture\Shaders\CustomMotionVectorTexture.shader" />
     <None Include="Assets\_Shaders\InteractiveSurfaceShader.shader" />
     <None Include="Assets\_Shaders\TesselationSample.shader" />
+    <None Include="Assets\_Shaders\TextureUdpateShader2.shader" />
     <None Include="Assets\_Shaders\TextureUpdateShader.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
