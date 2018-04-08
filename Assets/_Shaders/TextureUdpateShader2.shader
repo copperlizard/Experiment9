@@ -65,18 +65,22 @@
 				// sample the texture
 				//fixed4 col = fixed4(DtoCol(tex2D(_MainTex, float2(i.uv.x, 1.0 - i.uv.y)).r), 1.0);
 				
-				float d = 1.0 - tex2D(_MainTex, float2(i.uv.x, 1.0 - i.uv.y)).r;
-				float s = tex2D(_HeightMap, i.uv).r;
+				float d = tex2D(_MainTex, float2(i.uv.x, 1.0 - i.uv.y)).r;
+				float s = 1.0 - tex2D(_HeightMap, i.uv).r * 2.0;
 
-				float dif = d - s;
+				// d... 1 == sky, 0 == ground
+				// s... 0 == no height, 1 == max height
 
+				fixed4 col = fixed4(s, 0.0, 0.0, 1.0);
 				
-				float inter = 1.0 - smoothstep(0.0, 0.1, dif);
+				//Height map of player
+				//fixed4 col = fixed4(DepthtoCol(d), 1.0);
 
-				fixed4 col = fixed4(DepthtoCol(d) * inter, 1.0);
+				//Height map of surface
+				//fixed4 col = fixed4(DepthtoCol(s * 1.5), 1.0);		
 				
-				//fixed4 col = fixed4(0.0, 0.0, 0.0, 1.0);
-				
+
+
 
 				//NEED TO RUN TERRAIN DATA THROUGH DEPTH TO COL AND COMPARE COLORS, USE DIF TO DETERMINE WHAT BLENDS INTO TRACKS AND WHAT DOESNT!!!
 
