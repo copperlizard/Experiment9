@@ -10,6 +10,7 @@
         _Color ("Color", color) = (1,1,1,0)
         _SpecColor ("Spec color", color) = (0.5,0.5,0.5,0.5)
 		_NormalScanTriSideLength ("NormalScanTriSideLength", float) = 0.01
+		_NormalScanTriSideLengthTerrain ("NormalScanTriSideLengthTerrain", float) = 0.15
     }
     SubShader {
         Tags { "RenderType"="Opaque" }
@@ -41,6 +42,7 @@
 		float _HeightMapHeight;
         float _Displacement;
 		float _NormalScanTriSideLength;
+		float _NormalScanTriSideLengthTerrain;
 
 
         float _EdgeLength;
@@ -53,28 +55,39 @@
 		float3 FindSurfaceNormal (float2 texCoord)
 		{	
 			//Draw triangle around point, find triangle normal...
-			float3 pos = float3(texCoord.x, 0.0, texCoord.y);
-			float halfH = ((_NormalScanTriSideLength * 1.73205)/2.0)/2.0;
-			float3 m = pos - float3(0.0, 0.0, halfH);
-			float3 p1 = pos + float3(0.0, 0.0, halfH);
-			float3 p2 = m + float3(_NormalScanTriSideLength * 0.5, 0.0, 0.0);
-			float3 p3 = m - float3(_NormalScanTriSideLength * 0.5, 0.0, 0.0);
+			float3 posA = float3(texCoord.x, 0.0, texCoord.y);
+			float halfHA = ((_NormalScanTriSideLength * 1.73205)/2.0)/2.0;
+			float3 mA = posA - float3(0.0, 0.0, halfHA);
+			float3 p1 = posA + float3(0.0, 0.0, halfHA);
+			float3 p2 = mA + float3(_NormalScanTriSideLength * 0.5, 0.0, 0.0);
+			float3 p3 = mA - float3(_NormalScanTriSideLength * 0.5, 0.0, 0.0);
+
+			float3 posB = float3(texCoord.x, 0.0, texCoord.y);
+			float halfHB = ((_NormalScanTriSideLengthTerrain * 1.73205)/2.0)/2.0;
+			float3 mB = posB - float3(0.0, 0.0, halfHB);
+			float3 p4 = posB + float3(0.0, 0.0, halfHB);
+			float3 p5 = mB + float3(_NormalScanTriSideLengthTerrain * 0.5, 0.0, 0.0);
+			float3 p6 = mB - float3(_NormalScanTriSideLengthTerrain * 0.5, 0.0, 0.0);
 
 			p1.y = -tex2Dlod(_DispTex, float4(-p1.xz, 0.0, 0.0)).r * _Displacement;
 			p2.y = -tex2Dlod(_DispTex, float4(-p2.xz, 0.0, 0.0)).r * _Displacement;
 			p3.y = -tex2Dlod(_DispTex, float4(-p3.xz, 0.0, 0.0)).r * _Displacement;
 
-			float3 p1p2 = p2 - p1, p1p3 = p3 - p1;
+			p4.y = -tex2Dlod(_HeightMap, float4(-p3.xz, 0.0, 0.0)).a * _HeightMapHeight;
+			p5.y = -tex2Dlod(_HeightMap, float4(-p4.xz, 0.0, 0.0)).a * _HeightMapHeight;
+			p6.y = -tex2Dlod(_HeightMap, float4(-p5.xz, 0.0, 0.0)).a * _HeightMapHeight;
 
-			return normalize(cross(normalize(p1p2), normalize(p1p3)));
-			//return pos;
-			//return float3(1.0, 1.0, 1.0) * tex2Dlod(_DispTex, float4(-texCoord.xy, 0.0, 0.0)).r;
+			float3 p1p2 = p2 - p1, p1p3 = p3 - p1, p4p5 = p5 - p4, p4p6 = p6-p4;
+
+			return lerp(normalize(cross(normalize(p1p2), normalize(p1p3))), normalize(cross(normalize(p4p5), normalize(p4p6))), 0.5);
+
+			//return normalize(cross(normalize(p1p2), normalize(p1p3)));
 		}
 
         void vert (inout appdata v)
         {   
             float d = -tex2Dlod(_DispTex, float4(-v.texcoord.xy, 0.0, 0.0)).r * _Displacement;
-			float h = tex2Dlod(_HeightMap, float4(-v.texcoord.xy, 0.0, 0.0)).r * _HeightMapHeight;
+			float h = tex2Dlod(_HeightMap, float4(-v.texcoord.xy, 0.0, 0.0)).a * _HeightMapHeight;
 			//v.vertex.xyz += v.normal * d;
 			v.vertex.xyz += v.normal * h;
         }

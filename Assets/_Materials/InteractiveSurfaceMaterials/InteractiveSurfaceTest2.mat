@@ -76,10 +76,11 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _HeightMapHeight: 0.5
+    - _HeightMapHeight: 1.5
     - _Metallic: 0
     - _Mode: 0
-    - _NormalScanTriSideLength: 0.0012
+    - _NormalScanTriSideLength: 0.001
+    - _NormalScanTriSideLengthTerrain: 0.1
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0

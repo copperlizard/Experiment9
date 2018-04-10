@@ -25,7 +25,7 @@ public class TextureUpdateController : MonoBehaviour
     {
         if(m_terrain != null)
         {
-            m_heightMap = new Texture2D(m_terrain.heightmapWidth, m_terrain.heightmapHeight, TextureFormat.ARGB32, false);
+            m_heightMap = new Texture2D(m_terrain.heightmapWidth, m_terrain.heightmapHeight, TextureFormat.Alpha8, false);
 
             float[,] heights = new float[0, 0];
             heights = m_terrain.GetHeights(0, 0, m_terrain.heightmapWidth, m_terrain.heightmapHeight);
@@ -36,27 +36,11 @@ public class TextureUpdateController : MonoBehaviour
                     //float d = Mathf.Clamp(heights[y, x] * 2.0f, 0.0f, 1.0f);
                     float d = heights[y, x];
 
-                    //m_heightMap.SetPixel(x, y, new Color((float)x / m_heightMap.width, 0, (float)y / m_heightMap.height));
-                    m_heightMap.SetPixel(x, y, Color.red * d);
+                    //m_heightMap.SetPixel(x, y, Color.red * d);
+                    m_heightMap.SetPixel(x, y, Color.white * d);
                 }
             }
-
-            /*for (int y = 0; y < 30; y++)
-            {
-                for(int x = 0; x < 30; x++)
-                {
-                    m_heightMap.SetPixel(x, y, Color.blue);
-                }
-            }
-
-            for (int y = m_heightMap.height - 30; y < m_heightMap.height; y++)
-            {
-                for (int x = m_heightMap.width - 30; x < m_heightMap.width; x++)
-                {
-                    m_heightMap.SetPixel(x, y, Color.red);
-                }
-            }*/
-
+            
             m_heightMap.Apply();
 
             m_material.SetTexture("_HeightMap", m_heightMap);

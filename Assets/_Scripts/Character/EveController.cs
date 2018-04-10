@@ -28,7 +28,7 @@ public class EveController : MonoBehaviour
 
     // Use this for initialization
     void Start()
-    {
+    {   
         m_animator = GetComponent<Animator>();
         if (m_animator == null)
         {
@@ -72,6 +72,15 @@ public class EveController : MonoBehaviour
         checkGround();
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(m_groundAt.point, 0.1f);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(transform.position, 0.1f);
+    }
+
     private void UpdateAnimator()
     {
         m_animator.SetFloat("Forward", m_forward);
@@ -94,16 +103,19 @@ public class EveController : MonoBehaviour
 
     private void checkGround()
     {
-        if(!Physics.Raycast(transform.position + Vector3.up * 0.25f, Vector3.down, out m_groundAt, m_groundCheckDist + 0.25f, LayerMask.NameToLayer("Default")))
-        {
+        Debug.DrawLine(transform.position + Vector3.up * 0.5f, transform.position + Vector3.up * 0.25f + Vector3.down, Color.yellow);
+        if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out m_groundAt, m_groundCheckDist + 0.5f, ~LayerMask.NameToLayer("Default")))
+        {            
+            Debug.Log("ground");
             m_grounded = true;
             m_rigidBody.useGravity = false;
             transform.position = new Vector3(transform.position.x, Mathf.Lerp(transform.position.y, m_groundAt.point.y, m_lerpToGround), transform.position.z);
         }
         else
         {
+            Debug.Log("air");
             m_grounded = false;
-            m_rigidBody.useGravity = true;
+            m_rigidBody.velocity += Vector3.down * 9.8f * Time.deltaTime;
         }
     }
 
