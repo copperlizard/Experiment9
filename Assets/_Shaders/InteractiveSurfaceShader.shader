@@ -4,6 +4,8 @@
         _MainTex ("Base (RGB)", 2D) = "white" {}
         _DispTex ("Disp Texture", 2D) = "gray" {}
         _NormalMap ("Normalmap", 2D) = "bump" {}
+		_HeightMap ("HeightMap", 2D) = "black" {}
+		_HeightMapHeight ("HeightMapHeight", float) = 1.5
         _Displacement ("Displacement", Range(0, 1.0)) = 0.3
         _Color ("Color", color) = (1,1,1,0)
         _SpecColor ("Spec color", color) = (0.5,0.5,0.5,0.5)
@@ -31,13 +33,15 @@
 
 		sampler2D _MainTex;
         sampler2D _NormalMap;
+		sampler2D _HeightMap;
         fixed4 _Color;
 
 		sampler2D _DispTex;
+		//sampler2D _DispHistTex; //displacement history texture
+		float _HeightMapHeight;
         float _Displacement;
 		float _NormalScanTriSideLength;
 
-		sampler2D _DispHistTex; //displacement history texture
 
         float _EdgeLength;
 
@@ -70,15 +74,19 @@
         void vert (inout appdata v)
         {   
             float d = -tex2Dlod(_DispTex, float4(-v.texcoord.xy, 0.0, 0.0)).r * _Displacement;
-			v.vertex.xyz += v.normal * d;
+			float h = tex2Dlod(_HeightMap, float4(-v.texcoord.xy, 0.0, 0.0)).r * _HeightMapHeight;
+			//v.vertex.xyz += v.normal * d;
+			v.vertex.xyz += v.normal * h;
         }
 
         void surf (Input IN, inout SurfaceOutput o) {
-            half4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            o.Albedo = c.rgb;
+            half4 c = tex2D (_MainTex, IN.uv_MainTex * 2.0) * _Color;
+			//o.Albedo = c.rgb;
+			o.Albedo = c.rgb + tex2Dlod(_HeightMap, float4(-IN.uv_MainTex, 0.0, 0.0));
+            //o.Albedo = c.rgb + tex2Dlod(_DispTex, float4(-IN.uv_MainTex, 0.0, 0.0));
             o.Specular = 0.2;
             o.Gloss = 1.0;
-            o.Normal = UnpackNormal(tex2D(_NormalMap, IN.uv_MainTex));
+            o.Normal = UnpackNormal(tex2D(_NormalMap, IN.uv_MainTex * 2.0));
 			o.Normal = lerp(o.Normal, FindSurfaceNormal(IN.uv_MainTex), 0.8);
 			//o.Normal = FindSurfaceNormal(IN.uv_MainTex);
 			//o.Albedo = o.Normal;

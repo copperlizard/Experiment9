@@ -11,6 +11,9 @@ public class TextureUpdateController : MonoBehaviour
     private Material m_material;
 
     [SerializeField]
+    private Material m_snowMaterial;
+
+    [SerializeField]
     private RenderTexture m_srcTexture, m_outTexture, m_debugTex;
 
     private RenderTexture m_texHist, m_texBuf;
@@ -30,6 +33,7 @@ public class TextureUpdateController : MonoBehaviour
             {
                 for (int x = 0; x < m_heightMap.width; x++)
                 {
+                    //float d = Mathf.Clamp(heights[y, x] * 2.0f, 0.0f, 1.0f);
                     float d = heights[y, x];
 
                     //m_heightMap.SetPixel(x, y, new Color((float)x / m_heightMap.width, 0, (float)y / m_heightMap.height));
@@ -58,6 +62,11 @@ public class TextureUpdateController : MonoBehaviour
             m_material.SetTexture("_HeightMap", m_heightMap);
 
             Graphics.Blit(m_heightMap, m_debugTex);
+
+            if(m_snowMaterial != null)
+            {
+                m_snowMaterial.SetTexture("_HeightMap", m_heightMap);
+            }
         }
 
         m_texHist = new RenderTexture(m_srcTexture.width, m_srcTexture.height, m_srcTexture.depth, RenderTextureFormat.ARGB32);

@@ -2,9 +2,9 @@
 {
 	Properties
 	{
-		_MainTex ("Texture", 2D) = "white" {}
-		_TexHist ("Texture", 2D) = "white" {}
-		_HeightMap ("Texture", 2D) = "black" {}
+		_MainTex ("DepthTexture", 2D) = "white" {}
+		_TexHist ("TracksTexture", 2D) = "white" {}
+		_HeightMap ("HeightMap", 2D) = "black" {}
 	}
 	SubShader
 	{
@@ -68,24 +68,27 @@
 				float d = tex2D(_MainTex, float2(i.uv.x, 1.0 - i.uv.y)).r;
 				float s = 1.0 - tex2D(_HeightMap, i.uv).r * 2.0;
 
+				float dif = s - d;
+
+				float inter = 1.0 - smoothstep(0.0, 0.025, dif);
+
 				// d... 1 == sky, 0 == ground
 				// s... 0 == no height, 1 == max height
 
-				fixed4 col = fixed4(s, 0.0, 0.0, 1.0);
+				//fixed4 col = fixed4(s, 0.0, 0.0, 1.0);
 				
 				//Height map of player
-				//fixed4 col = fixed4(DepthtoCol(d), 1.0);
+				//fixed4 col = fixed4(DepthtoCol(d) * inter, 1.0);
 
 				//Height map of surface
-				//fixed4 col = fixed4(DepthtoCol(s * 1.5), 1.0);		
+				//fixed4 col = fixed4(DepthtoCol(s), 1.0);		
 				
-
+				fixed4 col = fixed4(inter, 0.0, 0.0, 0.0);
 
 
 				//NEED TO RUN TERRAIN DATA THROUGH DEPTH TO COL AND COMPARE COLORS, USE DIF TO DETERMINE WHAT BLENDS INTO TRACKS AND WHAT DOESNT!!!
 
-				//fixed4 col = fixed4(d, d, d, 1.0);
-
+				
 				/*float hstep = 2.0, vstep = 2.0, blur = 0.5;
 
 				fixed4 col = fixed4(0.0, 0.0, 0.0, 0.0);
@@ -104,8 +107,8 @@
 
 
 				// add history (could lerp with bias towards new frame to fade out steps overtime...)
-				//col += tex2D(_TexHist, i.uv);
-				//col = clamp(col, 0.0, 1.0);
+				col += tex2D(_TexHist, i.uv);
+				col = clamp(col, 0.0, 1.0);
 				
 				// apply fog
 				UNITY_APPLY_FOG(i.fogCoord, col);

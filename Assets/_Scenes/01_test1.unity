@@ -157,6 +157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_terrain: {fileID: 15600000, guid: bb586d89c66d3e04ba38111b74da8ae6, type: 2}
   m_material: {fileID: 2100000, guid: c13faa5aedacadb4796c628df286cfcc, type: 2}
+  m_snowMaterial: {fileID: 2100000, guid: 8ddb479b1af4a094d8129498ec081d31, type: 2}
   m_srcTexture: {fileID: 8400000, guid: 9f54cd70550caa34695d7bfae557995d, type: 2}
   m_outTexture: {fileID: 8400000, guid: 48f78e73b93b993438f2263e4432af65, type: 2}
   m_debugTex: {fileID: 8400000, guid: df2c2be807296b54fa34ab0966635908, type: 2}
@@ -865,6 +866,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_terrain: {fileID: 0}
   m_material: {fileID: 2100000, guid: 4aa51e32fe1795a4189013bbdb8cff0c, type: 2}
+  m_snowMaterial: {fileID: 0}
   m_srcTexture: {fileID: 8400000, guid: 70802c85ce94c284d92927e38a2c5b9b, type: 2}
   m_outTexture: {fileID: 8400000, guid: 479a778da8a154e4cac6af313f2d761c, type: 2}
   m_debugTex: {fileID: 8400000, guid: df2c2be807296b54fa34ab0966635908, type: 2}
@@ -1436,7 +1438,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 484bb0ccd223bc14e983be270c2b6974, type: 2}
+  - {fileID: 2100000, guid: 8ddb479b1af4a094d8129498ec081d31, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1464,7 +1466,7 @@ MeshCollider:
   m_GameObject: {fileID: 1666172073}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Convex: 0
   m_CookingOptions: 14
@@ -1523,7 +1525,7 @@ Terrain:
   m_SplatMapDistance: 1000
   m_HeightmapMaximumLOD: 0
   m_CastShadows: 1
-  m_DrawHeightmap: 1
+  m_DrawHeightmap: 0
   m_DrawTreesAndFoliage: 1
   m_ReflectionProbeUsage: 1
   m_MaterialType: 0
@@ -1580,7 +1582,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 1f1b4b5389a1c7f4791131e1f9f69b63, type: 2}
+  - {fileID: 2100000, guid: bae95dfbd6f5dd64cb0cf3e69e80ab45, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1608,7 +1610,7 @@ MeshCollider:
   m_GameObject: {fileID: 1813011644}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Convex: 0
   m_CookingOptions: 14
