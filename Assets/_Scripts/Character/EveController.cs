@@ -72,6 +72,28 @@ public class EveController : MonoBehaviour
         checkGround();
     }
 
+    private void OnAnimatorMove()
+    {
+        if (Time.timeScale <= 0.0f)
+        {
+            return;
+        }
+        
+        Vector3 v = m_animator.deltaPosition / Time.deltaTime;
+
+        if (m_rigidBody.useGravity)
+        {
+            // preserve velocity
+            v = m_rigidBody.velocity;
+        }
+
+        transform.rotation *= m_animator.deltaRotation;
+        
+
+        const float _velocityLerpRate = 20.0f;
+        m_rigidBody.velocity = Vector3.Lerp(m_rigidBody.velocity, v, _velocityLerpRate * Time.deltaTime);
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -106,16 +128,17 @@ public class EveController : MonoBehaviour
         Debug.DrawLine(transform.position + Vector3.up * 0.5f, transform.position + Vector3.up * 0.25f + Vector3.down, Color.yellow);
         if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out m_groundAt, m_groundCheckDist + 0.5f, ~LayerMask.NameToLayer("Default")))
         {            
-            Debug.Log("ground");
+            //Debug.Log("ground");
             m_grounded = true;
             m_rigidBody.useGravity = false;
             transform.position = new Vector3(transform.position.x, Mathf.Lerp(transform.position.y, m_groundAt.point.y, m_lerpToGround), transform.position.z);
         }
         else
         {
-            Debug.Log("air");
+            //Debug.Log("air");
             m_grounded = false;
-            m_rigidBody.velocity += Vector3.down * 9.8f * Time.deltaTime;
+            m_rigidBody.useGravity = true;
+            //m_rigidBody.velocity += Vector3.down * 9.8f * Time.deltaTime;
         }
     }
 

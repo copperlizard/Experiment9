@@ -53,8 +53,8 @@
 			
 			float GetInter(float2 uv)
 			{
-				float d = tex2D(_MainTex, float2(uv.x, 1.0 - uv.y)).r;
-				float s = 1.0 - tex2D(_HeightMap, uv).a * 2.0;
+				float d = tex2D(_MainTex, float2(uv.x, 1.0 - uv.y)).r + 0.24;
+				float s = 1.0 - tex2D(_HeightMap, uv).a;
 
 				float dif = s - d;
 
@@ -72,44 +72,12 @@
 			
 			fixed4 frag (v2f i) : SV_Target
 			{	
-				/*float d = tex2D(_MainTex, float2(i.uv.x, 1.0 - i.uv.y)).r;
-				float s = 1.0 - tex2D(_HeightMap, i.uv).a * 2.0;
-
-				float dif = s - d;
-
-				float inter = 1.0 - smoothstep(0.0, 0.025, dif);*/
-
-				//fixed4 col = fixed4(GetInter(i.uv), 0.0, 0.0, 0.0);
-
-				float hstep = 2.0, vstep = 2.0, blur = 0.5, blurInter = 0.0f;
-				blurInter = GetInter(float2(i.uv.x - 4.0 * blur * hstep, i.uv.y - 4.0 * blur * vstep)) * 0.0162162162;
-				blurInter += GetInter(float2(i.uv.x - 3.0 * blur * hstep, i.uv.y - 3.0 * blur * vstep)) * 0.0540540541;
-				blurInter += GetInter(float2(i.uv.x - 2.0 * blur * hstep, i.uv.y - 2.0 * blur * vstep)) * 0.1216216216;
-				blurInter += GetInter(float2(i.uv.x - 1.0 * blur * hstep, 1.0 - i.uv.y - 1.0 * blur * vstep)) * 0.1945945946;
-	
-				blurInter += GetInter(i.uv) * 0.2270270270;
-	
-				blurInter += GetInter(float2(i.uv.x + 1.0 * blur * hstep, i.uv.y + 1.0 * blur * vstep)) * 0.1945945946;
-				blurInter += GetInter(float2(i.uv.x + 2.0 * blur * hstep, i.uv.y + 2.0 * blur * vstep)) * 0.1216216216;
-				blurInter += GetInter(float2(i.uv.x + 3.0 * blur * hstep, i.uv.y + 3.0 * blur * vstep)) * 0.0540540541;
-				blurInter += GetInter(float2(i.uv.x + 4.0 * blur * hstep, i.uv.y + 4.0 * blur * vstep)) * 0.0162162162;
+				float blurInter = 0.0f;
+				blurInter = GetInter(float2(i.uv.x, i.uv.y)) * 0.2270270270;
+				blurInter += GetInter(float2(i.uv.x, i.uv.y + 1.3846153846)) * 0.3162162162;
+				blurInter += GetInter(float2(i.uv.x, i.uv.y - 3.2307692308)) * 0.0702702703;
 
 				fixed4 col = fixed4(blurInter, 0.0, 0.0, 0.0);
-
-				/*float hstep = 2.0, vstep = 2.0, blur = 0.5;
-
-				fixed4 col = fixed4(0.0, 0.0, 0.0, 0.0);
-				col = tex2D(_MainTex, float2(i.uv.x - 4.0 * blur * hstep, 1.0 - i.uv.y - 4.0 * blur * vstep)) * 0.0162162162;
-				col += tex2D(_MainTex, float2(i.uv.x - 3.0 * blur * hstep, 1.0 - i.uv.y - 3.0 * blur * vstep)) * 0.0540540541;
-				col += tex2D(_MainTex, float2(i.uv.x - 2.0 * blur * hstep, 1.0 - i.uv.y - 2.0 * blur * vstep)) * 0.1216216216;
-				col += tex2D(_MainTex, float2(i.uv.x - 1.0 * blur * hstep, 1.0 - i.uv.y - 1.0 * blur * vstep)) * 0.1945945946;
-	
-				col += tex2D(_MainTex, float2(i.uv.x, 1.0 - i.uv.y)) * 0.2270270270;
-	
-				col += tex2D(_MainTex, float2(i.uv.x + 1.0 * blur * hstep, 1.0 - i.uv.y + 1.0 * blur * vstep)) * 0.1945945946;
-				col += tex2D(_MainTex, float2(i.uv.x + 2.0 * blur * hstep, 1.0 - i.uv.y + 2.0 * blur * vstep)) * 0.1216216216;
-				col += tex2D(_MainTex, float2(i.uv.x + 3.0 * blur * hstep, 1.0 - i.uv.y + 3.0 * blur * vstep)) * 0.0540540541;
-				col += tex2D(_MainTex, float2(i.uv.x + 4.0 * blur * hstep, 1.0 - i.uv.y + 4.0 * blur * vstep)) * 0.0162162162;*/
 
 				// add history (could lerp with bias towards new frame to fade out steps overtime...)
 				col += tex2D(_TexHist, i.uv);

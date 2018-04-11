@@ -88,7 +88,7 @@
         {   
             float d = -tex2Dlod(_DispTex, float4(-v.texcoord.xy, 0.0, 0.0)).r * _Displacement;
 			float h = tex2Dlod(_HeightMap, float4(-v.texcoord.xy, 0.0, 0.0)).a * _HeightMapHeight;
-			//v.vertex.xyz += v.normal * d;
+			v.vertex.xyz += v.normal * d;
 			v.vertex.xyz += v.normal * h;
         }
 
